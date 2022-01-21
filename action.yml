@@ -1,0 +1,27 @@
+name: 'Compile .po to .mo'
+inputs:
+  input-path:
+    description: 'Path of input file'
+    required: true
+  output-path:
+    description: 'Path of output file'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Compile .po to .mo (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: ${{ github.action_path }}\bin\windows\compile-po2mo.exe "${{ inputs.input-path }}" "${{ inputs.output-path }}"
+    - name: Compile .po to .mo (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/bin/linux/compile-po2mo
+        ${{ github.action_path }}/bin/linux/compile-po2mo "${{ inputs.input-path }}" "${{ inputs.output-path }}"
+    - name: Compile .po to .mo (macOS)
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/bin/macos/compile-po2mo
+        ${{ github.action_path }}/bin/macos/compile-po2mo "${{ inputs.input-path }}" "${{ inputs.output-path }}"
